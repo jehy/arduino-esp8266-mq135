@@ -1,6 +1,8 @@
 
 WiFiClient client;
-void wifiCheckReconnect(int status, char* ssid, char* pass)
+int status = WL_IDLE_STATUS;     // the Wifi radio's status
+
+void wifiCheckReconnect(char* ssid, char* pass)
 {
  // attempt to connect to Wifi network:
   while ( status != WL_CONNECTED) {

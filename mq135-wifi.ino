@@ -8,8 +8,7 @@
 #include "wifi-creds.h"
 
 
-int status = WL_IDLE_STATUS;     // the Wifi radio's status
-
+char macStr[20];
 
 void setup() {
   delay(1000);
@@ -37,6 +36,11 @@ void setup() {
   Serial.print("You're connected to the network");
   printCurrentNet();
   printWifiData();
+
+  
+    byte mac[6];  
+    WiFi.macAddress(mac);
+    sprintf(macStr,"%02x:%02x:%02x:%02x:%02x:%02x",mac[5],mac[4],mac[3],mac[2],mac[1],mac[0]);
 }
 
 
@@ -45,7 +49,7 @@ void loop() {
   //dns.processNextRequest();  
   //server.handleClient();
   
-  wifiCheckReconnect(status,ssid,pass);
+  wifiCheckReconnect(ssid,pass);
   
   uint16_t valr = analogRead(A0);
   uint16_t val =  ((float)22000*(1023-valr)/valr); 
@@ -58,13 +62,15 @@ void loop() {
     Serial.println("\nStarting connection to server...");
   // if you get a connection, report back via serial:
   if (client.connect("co2.jehy.ru", 80)) {
-    Serial.println("connected to server");
+    Serial.println("connected to server");  
     // Make a HTTP request:
-    client.println("GET /send.php?data={\"id\":1,\"val\":"+String(valr)+",\"ppm\":"+String(valAIQ)+"} HTTP/1.1");
+    client.println("GET /send.php?data={\"id\":1,\"val\":"+String(valr)+",\"ppm\":"+String((int)valAIQ)+
+    ",\"mac\":\""+String(macStr)+"\",\"SSID\":\""+WiFi.SSID()+"\"} HTTP/1.1");
     client.println("Host: co2.jehy.ru");
     client.println("Connection: close");
     client.println();
     client.stop();
+    Serial.println("Request sent");
   }
 }
 
