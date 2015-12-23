@@ -45,6 +45,8 @@ void loop() {
   //dns.processNextRequest();  
   //server.handleClient();
   
+  wifiCheckReconnect(status,ssid,pass);
+  
   uint16_t valr = analogRead(A0);
   uint16_t val =  ((float)22000*(1023-valr)/valr); 
   float mq135_ro = mq135_getro(15231, 660);//8000;//mq135_getro(val, 500);

@@ -1,5 +1,16 @@
 
 WiFiClient client;
+void wifiCheckReconnect(int status, char* ssid, char* pass)
+{
+ // attempt to connect to Wifi network:
+  while ( status != WL_CONNECTED) {
+    Serial.print("Wifi not connected. Attempting to connect to WPA SSID: ");
+    Serial.println(ssid);
+    // Connect to WPA/WPA2 network:    
+    status = WiFi.begin(ssid, pass);
+    delay(10000);
+  }
+}
 
 void printWifiData() {
   // print your WiFi shield's IP address:
@@ -23,7 +34,6 @@ void printWifiData() {
   Serial.print(mac[1],HEX);
   Serial.print(":");
   Serial.println(mac[0],HEX);
- 
 }
 
 void printCurrentNet() {
