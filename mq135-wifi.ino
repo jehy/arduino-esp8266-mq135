@@ -68,6 +68,7 @@ void loop() {
       
   Serial.println("\nChecking connection...");
   wifiCheckReconnect(ssid,pass);
+  Serial.println("\nCurrent net:");
   printCurrentNet();
   Serial.println("\nStarting connection to server...");
   // if you get a connection, report back via serial:
