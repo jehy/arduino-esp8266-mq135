@@ -48,20 +48,24 @@ void setup() {
 void loop() {
   //dns.processNextRequest();  
   //server.handleClient();
+  delay(5000);
   
-  wifiCheckReconnect(ssid,pass);
-  
-  uint16_t valr = analogRead(A0);
-  uint16_t val =  ((float)22000*(1023-valr)/valr); 
-  float mq135_ro = mq135_getro(15231, 660);//8000;//mq135_getro(val, 500);
+  long valr = analogRead(A0);
+  long val =  ((float)22000*(1023-valr)/valr); 
+  long mq135_ro = mq135_getro(94010, 635);//8000;//mq135_getro(val, 500);
   //convert to ppm (using default ro)
   float valAIQ = mq135_getppm(val, mq135_ro);
   
-  delay(10000);
+  Serial.println("val raw = "+String(valr)+",val = "+String(val)+",ro = "+String(mq135_ro)+" ppm = "+String(valAIQ));
+  if(valAIQ<=0)
+    return;
+      
+  wifiCheckReconnect(ssid,pass);
   printCurrentNet();
-    Serial.println("\nStarting connection to server...");
+  Serial.println("\nStarting connection to server...");
   // if you get a connection, report back via serial:
-  if (client.connect("co2.jehy.ru", 80)) {
+  if (client.connect("co2.jehy.ru", 80)) 
+  {
     Serial.println("connected to server");  
     // Make a HTTP request:
     client.println("GET /send.php?data={\"id\":1,\"val\":"+String(valr)+",\"ppm\":"+String((int)valAIQ)+

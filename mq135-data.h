@@ -1,4 +1,5 @@
 
+
 #define MQ135_DEFAULTPPM 399 //default ppm of CO2 for calibration
 #define MQ135_DEFAULTRO 68550 //default Ro for MQ135_DEFAULTPPM ppm of CO2
 #define MQ135_SCALINGFACTOR 116.6020682 //CO2 gas value
@@ -21,8 +22,9 @@ double mq135_getppm(long resvalue, long ro) {
 double ret = 0;
 double validinterval = 0;
 validinterval = resvalue/(double)ro;
-//if(validinterval<MQ135_MAXRSRO && validinterval>MQ135_MINRSRO) {
-ret = (double)MQ135_SCALINGFACTOR * pow( ((double)resvalue/ro), MQ135_EXPONENT);
-//}
-return ret;
+if(validinterval>MQ135_MAXRSRO)
+  return -1;
+if(validinterval<MQ135_MINRSRO)
+  return -2;
+return (double)MQ135_SCALINGFACTOR * pow( ((double)resvalue/ro), MQ135_EXPONENT);
 }
