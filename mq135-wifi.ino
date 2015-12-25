@@ -51,6 +51,12 @@ void loop() {
   delay(5000);
   
   long valr = analogRead(A0);
+  if(valr==0)
+  {
+    Serial.println("Sensor returned 0, smth is not right. Skipping loop.");
+    return;
+  }
+  
   long val =  ((float)22000*(1023-valr)/valr); 
   long mq135_ro = mq135_getro(94010, 635);//8000;//mq135_getro(val, 500);
   //convert to ppm (using default ro)
@@ -60,6 +66,7 @@ void loop() {
   if(valAIQ<=0)
     return;
       
+  Serial.println("\nChecking connection...");
   wifiCheckReconnect(ssid,pass);
   printCurrentNet();
   Serial.println("\nStarting connection to server...");
