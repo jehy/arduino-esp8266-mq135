@@ -48,9 +48,12 @@ void setup() {
 void loop() {
   //dns.processNextRequest();  
   //server.handleClient();
+  Serial.println("loop started");
   delay(5000);
   
+  Serial.println("reading data");
   long valr = analogRead(A0);
+  Serial.println("calculating");
   if(valr==0)
   {
     Serial.println("Sensor returned 0, smth is not right. Skipping loop.");
@@ -58,11 +61,14 @@ void loop() {
   }
   
   long val =  ((float)22000*(1023-valr)/valr); 
-  long mq135_ro = mq135_getro(94010, 635);//8000;//mq135_getro(val, 500);
+  long mq135_ro = mq135_getro(115231, 500);//8000;//mq135_getro(val, 500);
   //convert to ppm (using default ro)
   float valAIQ = mq135_getppm(val, mq135_ro);
+
+  float ppm_corrected=getCorrectedPPM(val,21,20,mq135_ro);
   
-  Serial.println("val raw = "+String(valr)+",val = "+String(val)+",ro = "+String(mq135_ro)+" ppm = "+String(valAIQ));
+  Serial.println("val raw = "+String(valr)+",val = "+String(val)+",ro = "+String(mq135_ro)
+  +" ppm = "+String(valAIQ)+" corrected ppm = "+String(ppm_corrected));
   if(valAIQ<=0)
     return;
       
@@ -76,7 +82,7 @@ void loop() {
   {
     Serial.println("connected to server");  
     // Make a HTTP request:
-    client.println("GET /send.php?data={\"id\":1,\"val\":"+String(valr)+",\"ppm\":"+String((int)valAIQ)+
+    client.println("GET /send.php?data={\"id\":1,\"val\":"+String(valr)+",\"ppm\":"+String((int)ppm_corrected)+
     ",\"mac\":\""+String(macStr)+"\",\"SSID\":\""+WiFi.SSID()+"\"} HTTP/1.1");
     client.println("Host: co2.jehy.ru");
     client.println("Connection: close");
@@ -84,6 +90,7 @@ void loop() {
     client.stop();
     Serial.println("Request sent");
   }
+  Serial.println("loop finished");
 }
 
 
