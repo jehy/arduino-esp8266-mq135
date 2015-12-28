@@ -4,13 +4,19 @@ int status = WL_IDLE_STATUS;     // the Wifi radio's status
 
 void wifiCheckReconnect(char* ssid, char* pass)
 {
- // attempt to connect to Wifi network:
+  long previousMillis = 0;        // will store last time LED was updated
+  long interval = 10000;           // interval at which to blink (milliseconds)
+  unsigned long currentMillis = millis();
+  // attempt to connect to Wifi network:
   while ( status != WL_CONNECTED) {
+    if(currentMillis - previousMillis < interval) 
+      continue;
+    previousMillis = currentMillis;   
+    //dns.processNextRequest();  
     Serial.print("Wifi not connected. Attempting to connect to WPA SSID: ");
     Serial.println(ssid);
     // Connect to WPA/WPA2 network:    
     status = WiFi.begin(ssid, pass);
-    delay(10000);
   }
 }
 
