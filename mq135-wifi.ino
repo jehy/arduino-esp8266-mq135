@@ -9,6 +9,8 @@
 
 
 char macStr[20];
+long previousMillis = 0;        // will store last time LED was updated
+long interval = 5000;           // interval at which to blink (milliseconds)
 
 void setup() {
   delay(1000);
@@ -46,11 +48,15 @@ void setup() {
 
 
 void loop() {
+    unsigned long currentMillis = millis();
+ 
+  if(currentMillis - previousMillis < interval) 
+    return;
+   // save the last time you blinked the LED 
+   previousMillis = currentMillis;   
   //dns.processNextRequest();  
   //server.handleClient();
-  Serial.println("loop started");
-  delay(5000);
-  
+  Serial.println("loop started");  
   Serial.println("reading data");
   long valr = analogRead(A0);
   Serial.println("calculating");
@@ -65,7 +71,7 @@ void loop() {
   //convert to ppm (using default ro)
   float valAIQ = mq135_getppm(val, mq135_ro);
 
-  float ppm_corrected=getCorrectedPPM(val,21,20,mq135_ro);
+  float ppm_corrected=getCorrectedPPM(val,18,20,mq135_ro);
   
   Serial.println("val raw = "+String(valr)+",val = "+String(val)+",ro = "+String(mq135_ro)
   +" ppm = "+String(valAIQ)+" corrected ppm = "+String(ppm_corrected));
