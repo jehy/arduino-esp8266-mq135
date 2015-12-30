@@ -13,6 +13,7 @@ long previousMillis = 0;        // will store last time LED was updated
 long interval = 5000;           // interval at which to blink (milliseconds)
 
 void setup() {
+  wdt_enable(WDTO_8S);
   delay(1000);
   Serial.begin(115200);
   
@@ -71,7 +72,7 @@ void loop() {
   //convert to ppm (using default ro)
   float valAIQ = mq135_getppm(val, mq135_ro);
 
-  float ppm_corrected=getCorrectedPPM(val,18,20,mq135_ro);
+  float ppm_corrected=getCorrectedPPM(val,24,20,mq135_ro);
   
   Serial.println("val raw = "+String(valr)+",val = "+String(val)+",ro = "+String(mq135_ro)
   +" ppm = "+String(valAIQ)+" corrected ppm = "+String(ppm_corrected));
@@ -84,6 +85,7 @@ void loop() {
   printCurrentNet();
   Serial.println("\nStarting connection to server...");
   // if you get a connection, report back via serial:
+  wdt_reset();
   if (client.connect("co2.jehy.ru", 80)) 
   {
     Serial.println("connected to server");  

@@ -9,6 +9,7 @@ void wifiCheckReconnect(char* ssid, char* pass)
   unsigned long currentMillis = millis();
   // attempt to connect to Wifi network:
   while ( status != WL_CONNECTED) {
+    wdt_reset();
     if(currentMillis - previousMillis < interval) 
       continue;
     previousMillis = currentMillis;   
