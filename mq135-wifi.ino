@@ -12,6 +12,9 @@ char macStr[20];
 long previousMillis = 0;        // will store last time LED was updated
 long interval = 5000;           // interval at which to blink (milliseconds)
 
+int temp=20;
+int humidity=20;
+
 void setup() {
   wdt_enable(WDTO_8S);
   delay(1000);
@@ -69,11 +72,11 @@ void loop() {
   }
   
   long val =  ((float)22000*(1023-valr)/valr); 
-  long mq135_ro = mq135_getro(115231, 500);//8000;//mq135_getro(val, 500);
+  long mq135_ro = mq135_getro(71775, 850);//8000;//mq135_getro(val, 500);
   //convert to ppm (using default ro)
   float valAIQ = mq135_getppm(val, mq135_ro);
 
-  float ppm_corrected=getCorrectedPPM(val,24,20,mq135_ro);
+  float ppm_corrected=getCorrectedPPM(val,temp,humidity,mq135_ro);
   
   Serial.println("val raw = "+String(valr)+",val = "+String(val)+",ro = "+String(mq135_ro)
   +" ppm = "+String(valAIQ)+" corrected ppm = "+String(ppm_corrected));
