@@ -25,6 +25,7 @@ void setup() {
     delay(10000);
   }
 
+  listNetworks();
   
  // attempt to connect to Wifi network:
   while ( status != WL_CONNECTED) {
