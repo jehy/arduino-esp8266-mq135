@@ -1,8 +1,9 @@
 #include <ESP8266WiFi.h>
 //#include <DNSServer.h>
 #include <WiFiClient.h> 
-#include <ESP8266WebServer.h>
+//#include <ESP8266WebServer.h>
 #include <Wire.h>
+#include "MemoryFree.h"
 #include "mq135-data.h"
 #include "wifi-utils.h"
 #include "wifi-creds.h"
@@ -79,7 +80,7 @@ void loop() {
   float ppm_corrected=getCorrectedPPM(val,temp,humidity,mq135_ro);
   
   Serial.println("val raw = "+String(valr)+",val = "+String(val)+",ro = "+String(mq135_ro)
-  +" ppm = "+String(valAIQ)+" corrected ppm = "+String(ppm_corrected));
+  +" ppm = "+String(valAIQ)+" corrected ppm = "+String(ppm_corrected)+" free RAM: "+freemem());
   if(valAIQ<=0)
     return;
       
@@ -95,7 +96,7 @@ void loop() {
     Serial.println("connected to server");  
     // Make a HTTP request:
     client.println("GET /send.php?data={\"id\":1,\"val\":"+String(valr)+",\"ppm\":"+String((int)ppm_corrected)+
-    ",\"mac\":\""+String(macStr)+"\",\"SSID\":\""+WiFi.SSID()+"\"} HTTP/1.1");
+    ",\"mac\":\""+String(macStr)+"\",\"SSID\":\""+WiFi.SSID()+"\", \"FreeRAM""\""+freemem()+"\"} HTTP/1.1");
     client.println("Host: co2.jehy.ru");
     client.println("Connection: close");
     client.println();
