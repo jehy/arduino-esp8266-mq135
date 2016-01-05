@@ -13,8 +13,8 @@ char macStr[20];
 long previousMillis = 0;        // will store last time LED was updated
 long interval = 5000;           // interval at which to blink (milliseconds)
 
-int temp=21;
-int humidity=20;
+int temp=20;
+int humidity=25;
 
 void setup() {
   wdt_enable(WDTO_8S);
@@ -80,10 +80,12 @@ void loop() {
   float ppm_corrected=getCorrectedPPM(val,temp,humidity,mq135_ro);
   
   Serial.println("val raw = "+String(valr)+",val = "+String(val)+",ro = "+String(mq135_ro)
-  +" ppm = "+String(valAIQ)+" corrected ppm = "+String(ppm_corrected)+" free RAM: "+freemem());
+  +" ppm = "+String(valAIQ)+" corrected ppm = "+String(ppm_corrected)+" free RAM: "+String(freemem()));
   if(valAIQ<=0)
+  {
+    Serial.println("\nFunction mq135_getppm returned non valid interval! Data will not be sent.");
     return;
-      
+  }   
   Serial.println("\nChecking connection...");
   wifiCheckReconnect(ssid,pass);
   Serial.println("\nCurrent net:");
@@ -96,7 +98,7 @@ void loop() {
     Serial.println("connected to server");  
     // Make a HTTP request:
     client.println("GET /send.php?data={\"id\":1,\"val\":"+String(valr)+",\"ppm\":"+String((int)ppm_corrected)+
-    ",\"mac\":\""+String(macStr)+"\",\"SSID\":\""+WiFi.SSID()+"\", \"FreeRAM""\""+freemem()+"\"} HTTP/1.1");
+    ",\"mac\":\""+String(macStr)+"\",\"SSID\":\""+WiFi.SSID()+"\", \"FreeRAM\":\""+String(freemem())+"\"} HTTP/1.1");
     client.println("Host: co2.jehy.ru");
     client.println("Connection: close");
     client.println();

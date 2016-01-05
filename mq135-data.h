@@ -32,10 +32,10 @@ double mq135_getppm(long resvalue, long ro) {
 double ret = 0;
 double validinterval = 0;
 validinterval = resvalue/(double)ro;
-if(validinterval>MQ135_MAXRSRO)
+/*if(validinterval>MQ135_MAXRSRO)
   return -1;
 if(validinterval<MQ135_MINRSRO)
-  return -2;
+  return -2;*/
 return (double)MQ135_SCALINGFACTOR * pow( ((double)resvalue/ro), MQ135_EXPONENT);
 }
 
