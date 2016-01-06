@@ -17,7 +17,7 @@ int temp=20;
 int humidity=25;
 
 void setup() {
-  wdt_enable(WDTO_8S);
+  ///wdt_enable(WDTO_8S);
   delay(1000);
   Serial.begin(115200);
   
@@ -54,6 +54,7 @@ void setup() {
 
 
 void loop() {
+  ESP.wdtDisable();
     unsigned long currentMillis = millis();
  
   if(currentMillis - previousMillis < interval) 
@@ -92,7 +93,7 @@ void loop() {
   printCurrentNet();
   Serial.println("\nStarting connection to server...");
   // if you get a connection, report back via serial:
-  wdt_reset();
+  //wdt_reset();
   WiFiClient client;
   if (client.connect("co2.jehy.ru", 80)) 
   {
