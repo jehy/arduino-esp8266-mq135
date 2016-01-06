@@ -93,6 +93,7 @@ void loop() {
   Serial.println("\nStarting connection to server...");
   // if you get a connection, report back via serial:
   wdt_reset();
+  WiFiClient client;
   if (client.connect("co2.jehy.ru", 80)) 
   {
     Serial.println("connected to server");  
@@ -102,8 +103,19 @@ void loop() {
     client.println("Host: co2.jehy.ru");
     client.println("Connection: close");
     client.println();
+    while(client.connected() && !client.available()) delay(10); //waits for data
+    Serial.println("Respond:");
+    while(client.available()){
+      String line = client.readStringUntil('\r');
+      Serial.print(line);
+    }
+  
     client.stop();
     Serial.println("Request sent");
+  }
+  else
+  {
+    Serial.println("Connection failed");
   }
   Serial.println("loop finished");
 }

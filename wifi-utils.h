@@ -1,5 +1,4 @@
 
-WiFiClient client;
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
 
 void printEncryptionType(int thisType) {
