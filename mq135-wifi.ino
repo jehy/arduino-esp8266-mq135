@@ -14,7 +14,7 @@ long previousMillis = 0;        // will store last time LED was updated
 long interval = 5000;           // interval at which to blink (milliseconds)
 
 int temp=20;
-int humidity=25;
+int humidity=27;
 
 void setup() {
   ///wdt_enable(WDTO_8S);
@@ -74,7 +74,7 @@ void loop() {
   }
   
   long val =  ((float)22000*(1023-valr)/valr); 
-  long mq135_ro = mq135_getro(75617, 1200);//8000;//mq135_getro(val, 500);
+  long mq135_ro = mq135_getro(43615,1274);//(75617, 1200);//8000;//mq135_getro(val, 500);
   //convert to ppm (using default ro)
   float valAIQ = mq135_getppm(val, mq135_ro);
 
